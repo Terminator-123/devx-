@@ -87,14 +87,19 @@ def process_match(
     if not calibrator.is_valid:
         warnings.append("Court calibration invalid or not provided: court_x/court_y and metre metrics omitted.")
 
-    # Setup annotated video output
+    # Setup annotated video output with browser-compatible H.264 (avc1) codec
     annotated_video_path = os.path.join(output_dir, "annotated.mp4")
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out_writer = cv2.VideoWriter(annotated_video_path, fourcc, min(fps, 25.0), (width, height))
+    fourcc = cv2.VideoWriter_fourcc(*'avc1')
+    out_writer = cv2.VideoWriter(annotated_video_path, fourcc, fps, (width, height))
+    if not out_writer.isOpened():
+        # Fallback to mp4v if avc1 is unavailable
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out_writer = cv2.VideoWriter(annotated_video_path, fourcc, fps, (width, height))
 
     sample_interval = max(1, int(fps / 2))
     player_tracks: Dict[int, List[Dict[str, Any]]] = {1: [], 2: []}
     first_annotated_frame = None
+    latest_matched = []
 
     frame_idx = 0
     while cap.isOpened():
@@ -122,8 +127,9 @@ def process_match(
                         })
 
             matched = tracker.update(raw_detections, frame_width=width, frame_height=height)
+            latest_matched = matched
 
-            annotated_frame = frame.copy()
+            # Collect tracking sample
             for m in matched:
                 pid = m["player_id"]
                 foot_x = m["foot_x"]
@@ -132,7 +138,6 @@ def process_match(
                 court_pt = calibrator.map_point(foot_x, foot_y) if calibrator.is_valid else None
                 calib_valid = bool(court_pt is not None)
 
-                # Normalized sample matching Hour 3 schema
                 sample = {
                     "timestamp_seconds": timestamp_seconds,
                     "player_id": pid,
@@ -148,26 +153,40 @@ def process_match(
                     player_tracks[pid] = []
                 player_tracks[pid].append(sample)
 
-                # Render annotations
-                x1, y1, x2, y2 = [int(v) for v in m["bbox"]]
-                col = (0, 220, 100) if pid == 1 else (255, 140, 20)
-                cv2.rectangle(annotated_frame, (x1, y1), (x2, y2), col, 2)
-                cv2.circle(annotated_frame, (int(foot_x), int(foot_y)), 5, (0, 0, 255), -1)
-                cv2.putText(
-                    annotated_frame,
-                    f"P{pid} ({m['confidence']:.2f})",
-                    (x1, max(20, y1 - 8)),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.55,
-                    col,
-                    2
-                )
+        # Draw current persistent player tracking boxes and trails on every frame
+        annotated_frame = frame.copy()
+        for m in latest_matched:
+            pid = m["player_id"]
+            foot_x = m["foot_x"]
+            foot_y = m["foot_y"]
+            x1, y1, x2, y2 = [int(v) for v in m["bbox"]]
+            col = (0, 220, 100) if pid == 1 else (255, 140, 20)
+            
+            # Bounding box
+            cv2.rectangle(annotated_frame, (x1, y1), (x2, y2), col, 2)
+            # Foot point tracking dot
+            cv2.circle(annotated_frame, (int(foot_x), int(foot_y)), 6, (0, 0, 255), -1)
+            # Label
+            cv2.rectangle(annotated_frame, (x1, max(0, y1 - 22)), (x1 + 95, y1), col, -1)
+            cv2.putText(
+                annotated_frame,
+                f"Player {pid}",
+                (x1 + 4, max(14, y1 - 6)),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.45,
+                (255, 255, 255),
+                1
+            )
 
-            if first_annotated_frame is None and matched:
-                first_annotated_frame = annotated_frame.copy()
+        # Draw calibrated court polygon if valid
+        if calibrator.is_valid and court_corners:
+            pts = np.array(court_corners, np.int32).reshape((-1, 1, 2))
+            cv2.polylines(annotated_frame, [pts], isClosed=True, color=(255, 255, 0), thickness=2)
 
-            out_writer.write(annotated_frame)
+        if first_annotated_frame is None and latest_matched:
+            first_annotated_frame = annotated_frame.copy()
 
+        out_writer.write(annotated_frame)
         frame_idx += 1
 
     cap.release()

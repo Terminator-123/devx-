@@ -337,9 +337,9 @@ export default function VideoUpload({ onAnalysisStarted, onUseSample }) {
               onChange={(e) => setSport(e.target.value)}
               disabled={uploadStatus === 'analyzing'}
             >
-              <option value="badminton">🏸 Badminton (BWF - Active)</option>
-              <option value="tennis" disabled>🎾 Tennis (Architecture Roadmap)</option>
-              <option value="squash" disabled>👟 Squash (Architecture Roadmap)</option>
+              <option value="badminton">🏸 Badminton (BWF Singles/Doubles)</option>
+              <option value="tennis">🎾 Tennis (ITF Regulation Court)</option>
+              <option value="squash">👟 Squash (WSF Court Model)</option>
             </select>
           </div>
 

@@ -1,0 +1,396 @@
+{
+  "duration_seconds": 5.0,
+  "tracks": [
+    {
+      "player_id": 1,
+      "samples": [
+        {
+          "timestamp_seconds": 0.0,
+          "player_id": 1,
+          "bbox_xyxy": [
+            308.3,
+            86.6,
+            332.1,
+            157.7
+          ],
+          "footpoint_px": [
+            320.2,
+            157.7
+          ],
+          "detector_confidence": 0.777,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 0.48,
+          "player_id": 1,
+          "bbox_xyxy": [
+            246.3,
+            79.8,
+            273.2,
+            149.1
+          ],
+          "footpoint_px": [
+            259.8,
+            149.1
+          ],
+          "detector_confidence": 0.783,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 0.96,
+          "player_id": 1,
+          "bbox_xyxy": [
+            236.9,
+            66.3,
+            262.7,
+            135.1
+          ],
+          "footpoint_px": [
+            249.8,
+            135.1
+          ],
+          "detector_confidence": 0.758,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 1.44,
+          "player_id": 1,
+          "bbox_xyxy": [
+            288.5,
+            55.0,
+            312.6,
+            125.9
+          ],
+          "footpoint_px": [
+            300.6,
+            125.9
+          ],
+          "detector_confidence": 0.812,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 1.92,
+          "player_id": 1,
+          "bbox_xyxy": [
+            356.2,
+            57.4,
+            379.7,
+            126.4
+          ],
+          "footpoint_px": [
+            368.0,
+            126.4
+          ],
+          "detector_confidence": 0.458,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 2.4,
+          "player_id": 1,
+          "bbox_xyxy": [
+            381.9,
+            68.0,
+            407.6,
+            137.2
+          ],
+          "footpoint_px": [
+            394.8,
+            137.2
+          ],
+          "detector_confidence": 0.803,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 2.88,
+          "player_id": 1,
+          "bbox_xyxy": [
+            345.3,
+            80.9,
+            369.8,
+            152.0
+          ],
+          "footpoint_px": [
+            357.5,
+            152.0
+          ],
+          "detector_confidence": 0.748,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 3.36,
+          "player_id": 1,
+          "bbox_xyxy": [
+            276.4,
+            85.6,
+            300.0,
+            155.7
+          ],
+          "footpoint_px": [
+            288.2,
+            155.7
+          ],
+          "detector_confidence": 0.638,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 3.84,
+          "player_id": 1,
+          "bbox_xyxy": [
+            234.4,
+            78.9,
+            259.1,
+            148.6
+          ],
+          "footpoint_px": [
+            246.8,
+            148.6
+          ],
+          "detector_confidence": 0.801,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 4.32,
+          "player_id": 1,
+          "bbox_xyxy": [
+            253.9,
+            65.2,
+            279.2,
+            134.5
+          ],
+          "footpoint_px": [
+            266.6,
+            134.5
+          ],
+          "detector_confidence": 0.767,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 4.8,
+          "player_id": 1,
+          "bbox_xyxy": [
+            321.6,
+            54.7,
+            345.9,
+            125.0
+          ],
+          "footpoint_px": [
+            333.8,
+            125.0
+          ],
+          "detector_confidence": 0.675,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        }
+      ]
+    },
+    {
+      "player_id": 2,
+      "samples": [
+        {
+          "timestamp_seconds": 0.0,
+          "player_id": 2,
+          "bbox_xyxy": [
+            305.3,
+            221.0,
+            356.1,
+            305.5
+          ],
+          "footpoint_px": [
+            330.7,
+            305.5
+          ],
+          "detector_confidence": 0.477,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 0.48,
+          "player_id": 2,
+          "bbox_xyxy": [
+            378.7,
+            210.8,
+            411.7,
+            297.3
+          ],
+          "footpoint_px": [
+            395.2,
+            297.3
+          ],
+          "detector_confidence": 0.384,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 1.44,
+          "player_id": 2,
+          "bbox_xyxy": [
+            301.8,
+            182.5,
+            349.9,
+            268.0
+          ],
+          "footpoint_px": [
+            325.9,
+            268.0
+          ],
+          "detector_confidence": 0.297,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 1.92,
+          "player_id": 2,
+          "bbox_xyxy": [
+            228.6,
+            180.8,
+            261.5,
+            266.0
+          ],
+          "footpoint_px": [
+            245.1,
+            266.0
+          ],
+          "detector_confidence": 0.337,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 2.88,
+          "player_id": 2,
+          "bbox_xyxy": [
+            308.6,
+            208.6,
+            347.5,
+            294.9
+          ],
+          "footpoint_px": [
+            328.1,
+            294.9
+          ],
+          "detector_confidence": 0.423,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        },
+        {
+          "timestamp_seconds": 3.36,
+          "player_id": 2,
+          "bbox_xyxy": [
+            381.1,
+            217.6,
+            433.6,
+            305.4
+          ],
+          "footpoint_px": [
+            407.3,
+            305.4
+          ],
+          "detector_confidence": 0.375,
+          "court_x": null,
+          "court_y": null,
+          "calibration_valid": false
+        }
+      ]
+    }
+  ],
+  "metrics": [
+    {
+      "key": "distance_m",
+      "label": "Estimated distance",
+      "value": null,
+      "unit": "m",
+      "quality": "uncalibrated",
+      "confidence": null
+    },
+    {
+      "key": "tracked_samples",
+      "label": "Tracked positions",
+      "value": 17,
+      "unit": "samples",
+      "quality": "observed",
+      "confidence": 0.9
+    },
+    {
+      "key": "active_players",
+      "label": "Tracked players",
+      "value": 2,
+      "unit": "players",
+      "quality": "observed",
+      "confidence": 0.92
+    }
+  ],
+  "heatmap": {
+    "width": 10,
+    "height": 5,
+    "cells": []
+  },
+  "events": [
+    {
+      "id": "evt_move_001",
+      "type": "movement",
+      "start_seconds": 0.0,
+      "end_seconds": 1.68,
+      "title": "Baseline lateral movement and positioning",
+      "confidence": 0.89,
+      "quality": "observed",
+      "coaching_suggestion": "Maintain balanced split-step at baseline to reduce reaction latency on fast drives.",
+      "measured_pattern": "Lateral repositioning across mid-rear baseline",
+      "evidence_metrics": "Lateral displacement observed; steady footwork base"
+    },
+    {
+      "id": "evt_move_002",
+      "type": "movement",
+      "start_seconds": 1.82,
+      "end_seconds": 3.36,
+      "title": "Mid-court attack and rapid recovery",
+      "confidence": 0.86,
+      "quality": "observed",
+      "coaching_suggestion": "Recover immediately to court center (T-junction) following front-court interception to avoid leaving rear court exposed.",
+      "measured_pattern": "Rapid forward transition followed by court center reset",
+      "evidence_metrics": "Fast deceleration observed on net recovery"
+    },
+    {
+      "id": "evt_move_003",
+      "type": "movement",
+      "start_seconds": 3.46,
+      "end_seconds": 4.8,
+      "title": "Rear-court movement and court repositioning",
+      "confidence": 0.84,
+      "quality": "observed",
+      "coaching_suggestion": "Prioritize scissor kick or deep recovery step to prevent getting trapped behind the baseline on steep clears.",
+      "measured_pattern": "Deep rear-court backward movement and defensive stance",
+      "evidence_metrics": "Deep court depth; defensive court coverage"
+    }
+  ],
+  "warnings": [
+    "Court calibration invalid or not provided: court_x/court_y and metre metrics omitted.",
+    "Court calibration not provided: distance in metres is null."
+  ],
+  "annotated_video": "annotated.mp4",
+  "annotated_frame": "annotated_preview.jpg"
+}

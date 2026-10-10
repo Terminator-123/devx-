@@ -6,11 +6,14 @@ with badminton court lines and players for CPU testing.
 import cv2
 import numpy as np
 
-def create_sample_video(output_path="sample.mp4", duration_sec=4, fps=25, width=640, height=360):
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+def create_sample_video(output_path="sample.mp4", duration_sec=5, fps=25, width=640, height=360):
+    fourcc = cv2.VideoWriter_fourcc(*'avc1')
     out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
-    total_frames = int(duration_sec * fps)
+    if not out.isOpened():
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
+    total_frames = int(duration_sec * fps)
     court_color = (40, 140, 60)  # Green badminton court mat
     line_color = (255, 255, 255)
 
@@ -34,25 +37,30 @@ def create_sample_video(output_path="sample.mp4", duration_sec=4, fps=25, width=
         cv2.line(frame, (c_left, net_y - 45), (c_right, net_y - 45), line_color, 1)
         cv2.line(frame, (c_left, net_y + 45), (c_right, net_y + 45), line_color, 1)
 
-        # Player 1 (near court / bottom): moves left and right
-        p1_x = int(320 + 80 * np.sin(t * 2.5))
-        p1_y = int(250 + 20 * np.cos(t * 1.8))
+        # Player 1 (near court / bottom): moves left and right dynamically
+        p1_x = int(320 + 85 * np.sin(t * 2.2))
+        p1_y = int(255 + 20 * np.cos(t * 1.8))
         # Draw player silhouette (head + body + limbs)
-        cv2.circle(frame, (p1_x, p1_y - 45), 10, (230, 190, 160), -1)  # Head
-        cv2.rectangle(frame, (p1_x - 12, p1_y - 35), (p1_x + 12, p1_y), (0, 0, 220), -1)  # Red Jersey
-        cv2.line(frame, (p1_x - 6, p1_y), (p1_x - 8, p1_y + 25), (40, 40, 40), 4)  # Left Leg
-        cv2.line(frame, (p1_x + 6, p1_y), (p1_x + 8, p1_y + 25), (40, 40, 40), 4)  # Right Leg
-        # Racket
+        cv2.circle(frame, (p1_x, p1_y - 45), 11, (230, 190, 160), -1)  # Head
+        cv2.rectangle(frame, (p1_x - 14, p1_y - 34), (p1_x + 14, p1_y), (0, 0, 220), -1)  # Red Jersey
+        cv2.line(frame, (p1_x - 7, p1_y), (p1_x - 9, p1_y + 26), (40, 40, 40), 5)  # Left Leg
+        cv2.line(frame, (p1_x + 7, p1_y), (p1_x + 9, p1_y + 26), (40, 40, 40), 5)  # Right Leg
+        # Racket & Arm
         cv2.line(frame, (p1_x + 10, p1_y - 20), (p1_x + 28, p1_y - 40), (200, 200, 200), 2)
-        cv2.circle(frame, (p1_x + 32, p1_y - 44), 8, (200, 200, 200), 1)
+        cv2.circle(frame, (p1_x + 32, p1_y - 44), 9, (200, 200, 200), 1)
 
         # Player 2 (far court / top): moves across top half
-        p2_x = int(320 - 70 * np.sin(t * 2.2))
-        p2_y = int(110 + 15 * np.cos(t * 2.0))
-        cv2.circle(frame, (p2_x, p2_y - 35), 8, (230, 190, 160), -1)
-        cv2.rectangle(frame, (p2_x - 9, p2_y - 27), (p2_x + 9, p2_y), (220, 120, 20), -1)  # Blue Jersey
-        cv2.line(frame, (p2_x - 5, p2_y), (p2_x - 6, p2_y + 20), (40, 40, 40), 3)
-        cv2.line(frame, (p2_x + 5, p2_y), (p2_x + 6, p2_y + 20), (40, 40, 40), 3)
+        p2_x = int(320 - 75 * np.sin(t * 2.0))
+        p2_y = int(115 + 16 * np.cos(t * 1.9))
+        cv2.circle(frame, (p2_x, p2_y - 35), 9, (230, 190, 160), -1)
+        cv2.rectangle(frame, (p2_x - 11, p2_y - 26), (p2_x + 11, p2_y), (220, 120, 20), -1)  # Blue Jersey
+        cv2.line(frame, (p2_x - 5, p2_y), (p2_x - 7, p2_y + 22), (40, 40, 40), 4)
+        cv2.line(frame, (p2_x + 5, p2_y), (p2_x + 7, p2_y + 22), (40, 40, 40), 4)
+
+        # Shuttlecock flight trail
+        shuttle_x = int(320 + 80 * np.cos(t * 3.5))
+        shuttle_y = int(185 + 65 * np.sin(t * 3.5))
+        cv2.circle(frame, (shuttle_x, shuttle_y), 3, (255, 255, 255), -1)
 
         out.write(frame)
 
