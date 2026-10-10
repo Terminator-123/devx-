@@ -62,6 +62,14 @@ export default function App() {
               Dashboard (#{currentMatch.matchId})
             </button>
           )}
+          <button
+            type="button"
+            className="nav-btn nav-btn-demo"
+            onClick={handleLoadSampleDemo}
+            title="Instant Badminton AI Demo Analysis"
+          >
+            ⚡ Live Demo
+          </button>
         </div>
       </nav>
 
@@ -82,7 +90,7 @@ export default function App() {
       </div>
 
       <footer className="footer">
-        <p>RallyLens AI • Hour 3 Sprint • Badminton Performance & Tactical Evidence Platform</p>
+        <p>RallyLens AI • Elite Athletic Vision & Court Geometry Intelligence Platform • Multi-Frame Tracking & Tactical AI</p>
       </footer>
     </div>
   );
