@@ -45,9 +45,8 @@ export default function Analysis({ matchId, initialVideoUrl, onBackToUpload }) {
         }
       } catch (err) {
         if (!isMounted) return;
-        setError(err.message || 'Error communicating with backend API.');
-        setLoading(false);
-        if (pollInterval) clearInterval(pollInterval);
+        // Do not abort immediately on transient errors during early processing
+        console.warn('Status poll warning:', err);
       }
     };
 
