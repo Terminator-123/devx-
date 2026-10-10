@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Upload, Film, Play, AlertCircle, AlertTriangle, CheckCircle, Loader2, RefreshCw } from 'lucide-react';
+import { Upload, Film, Play, AlertCircle, AlertTriangle, CheckCircle, Loader2, RefreshCw, Camera, Video, StopCircle } from 'lucide-react';
 import { uploadMatch, startAnalysis } from '../api';
 import CourtCalibration from './CourtCalibration';
 
@@ -19,6 +19,14 @@ export default function VideoUpload({ onAnalysisStarted, onUseSample }) {
   const [calibWarning, setCalibWarning] = useState(null);
   const [dragActive, setDragActive] = useState(false);
   const [reopenId, setReopenId] = useState('');
+
+  // Real-time camera recording states
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
+  const mediaRecorderRef = useRef(null);
+  const recordedChunksRef = useRef([]);
+  const streamRef = useRef(null);
+  const liveVideoPreviewRef = useRef(null);
 
   const fileInputRef = useRef(null);
 
@@ -70,6 +78,68 @@ export default function VideoUpload({ onAnalysisStarted, onUseSample }) {
       setErrorMessage(err.message || 'Video upload failed. Check backend connection.');
     }
   };
+
+  // Real-time camera recording logic (works with laptop webcam or mobile browser back camera)
+  const startCameraRecording = async () => {
+    try {
+      setErrorMessage(null);
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false
+      });
+      streamRef.current = stream;
+      if (liveVideoPreviewRef.current) {
+        liveVideoPreviewRef.current.srcObject = stream;
+      }
+
+      recordedChunksRef.current = [];
+      const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
+        ? 'video/webm;codecs=vp9'
+        : 'video/webm';
+
+      const recorder = new MediaRecorder(stream, { mimeType });
+      mediaRecorderRef.current = recorder;
+
+      recorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+          recordedChunksRef.current.push(event.data);
+        }
+      };
+
+      recorder.onstop = () => {
+        const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+        const capturedFile = new File([blob], `live_badminton_${Date.now()}.webm`, { type: 'video/webm' });
+        // Stop stream tracks
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach((track) => track.stop());
+        }
+        setIsRecording(false);
+        handleFileSelection(capturedFile);
+      };
+
+      recorder.start(1000); // 1-second chunks
+      setIsRecording(true);
+      setRecordingSeconds(0);
+    } catch (err) {
+      setErrorMessage(`Camera access denied or unavailable: ${err.message}`);
+    }
+  };
+
+  const stopCameraRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+    }
+  };
+
+  useEffect(() => {
+    let timer = null;
+    if (isRecording) {
+      timer = setInterval(() => {
+        setRecordingSeconds((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => { if (timer) clearInterval(timer); };
+  }, [isRecording]);
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -176,13 +246,49 @@ export default function VideoUpload({ onAnalysisStarted, onUseSample }) {
 
           {!previewUrl ? (
             <div className="dropzone-prompt">
-              <div className="upload-icon-wrapper">
-                <Upload className="upload-icon" />
-              </div>
-              <p className="drop-main-text">
-                <strong>Click to browse</strong> or drag & drop video here
-              </p>
-              <p className="drop-sub-text">MP4, MOV, AVI, or WebM (Max 200MB)</p>
+              {isRecording ? (
+                <div className="live-camera-recording-box" onClick={(e) => e.stopPropagation()}>
+                  <video
+                    ref={liveVideoPreviewRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="live-camera-video-feed"
+                  />
+                  <div className="recording-indicator-row">
+                    <span className="rec-pulse-dot"></span>
+                    <span className="rec-timer-text">Recording Live Court Footage: {recordingSeconds}s</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-stop-rec"
+                    onClick={stopCameraRecording}
+                  >
+                    <StopCircle className="btn-icon" /> Stop & Process Clip
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="upload-icon-wrapper">
+                    <Upload className="upload-icon" />
+                  </div>
+                  <p className="drop-main-text">
+                    <strong>Click to browse</strong> or drag & drop video here
+                  </p>
+                  <p className="drop-sub-text">MP4, MOV, AVI, or WebM (Max 200MB)</p>
+
+                  <div className="camera-record-row" onClick={(e) => e.stopPropagation()}>
+                    <span className="divider-text">── OR ──</span>
+                    <button
+                      type="button"
+                      className="btn-camera-capture"
+                      onClick={startCameraRecording}
+                    >
+                      <Camera className="camera-icon" /> Record Live with Mobile / Webcam
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           ) : (
             <div className="preview-wrapper" onClick={(e) => e.stopPropagation()}>

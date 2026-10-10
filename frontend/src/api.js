@@ -116,3 +116,51 @@ export function getMediaAnnotatedUrl(matchId) {
 export function getMediaPreviewUrl(matchId) {
   return `${API_BASE_URL}/media/${matchId}/annotated_preview.jpg`;
 }
+
+/**
+ * Add manual observation note/event
+ * POST /api/matches/{id}/manual-observation
+ */
+export async function addManualObservation(matchId, observation) {
+  const response = await fetch(`${API_BASE_URL}/api/matches/${matchId}/manual-observation`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(observation),
+  });
+  if (!response.ok) throw new Error('Failed to save manual observation');
+  return await response.json();
+}
+
+/**
+ * Get 1-minute segmented tactical chunk summaries
+ * GET /api/matches/{id}/minute-chunks
+ */
+export async function getMinuteChunks(matchId) {
+  const response = await fetch(`${API_BASE_URL}/api/matches/${matchId}/minute-chunks`);
+  if (!response.ok) throw new Error('Failed to fetch minute summaries');
+  return await response.json();
+}
+
+/**
+ * Trigger transfer learning / training job
+ * POST /api/training/start
+ */
+export async function startTraining(datasetName, epochs = 10) {
+  const response = await fetch(`${API_BASE_URL}/api/training/start`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ dataset_name: datasetName, epochs: epochs }),
+  });
+  if (!response.ok) throw new Error('Failed to initialize dataset training');
+  return await response.json();
+}
+
+/**
+ * Get training progress status
+ * GET /api/training/{job_id}
+ */
+export async function getTrainingStatus(jobId) {
+  const response = await fetch(`${API_BASE_URL}/api/training/${jobId}`);
+  if (!response.ok) throw new Error('Failed to get training status');
+  return await response.json();
+}

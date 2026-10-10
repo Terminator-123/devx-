@@ -1,21 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import VideoUpload from '../components/VideoUpload';
-import { Target, Cpu, Clock, CheckCircle2 } from 'lucide-react';
+import ModelTrainingModal from '../components/ModelTrainingModal';
+import { Target, Cpu, Clock, CheckCircle2, Database, Sparkles } from 'lucide-react';
 
 export default function Home({ onNavigateToAnalysis, onLoadSampleDemo }) {
+  const [showTrainingModal, setShowTrainingModal] = useState(false);
+
   return (
     <div className="page-home">
       <header className="hero-header">
-        <div className="badge-pill">
-          <span className="badge-dot" /> RallyLens AI • Single-Camera Tactical Intelligence
+        <div className="hero-top-action-bar">
+          <div className="badge-pill">
+            <span className="badge-dot" /> RallyLens AI • Single-Camera Tactical Intelligence
+          </div>
+          <button
+            type="button"
+            className="btn-open-training-modal"
+            onClick={() => setShowTrainingModal(true)}
+          >
+            <Database className="btn-icon-xs text-indigo" />
+            <span>Dataset Fine-Tuning (BFMD / SportsMOT / Shuttlecock)</span>
+          </button>
         </div>
+
         <h1 className="hero-title">
           Badminton Multi-Frame Tracking & Tactical Analysis
         </h1>
         <p className="hero-description">
-          Upload recorded match footage, calibrate the 4 court corners for metric projection, and extract persistent player tracks and tactical evidence.
+          Upload recorded match footage, record live with your mobile device or webcam, calibrate the 4 court corners, and review automated strength/weakness diagnostics.
         </p>
       </header>
+
+      {showTrainingModal && (
+        <ModelTrainingModal onClose={() => setShowTrainingModal(false)} />
+      )}
 
       <main className="main-content">
         <VideoUpload

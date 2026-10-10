@@ -2,8 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import MetricCard from '../components/MetricCard';
 import CourtHeatmap from '../components/CourtHeatmap';
 import EvidenceTimeline from '../components/EvidenceTimeline';
+import AICoach from '../components/AICoach';
+import MinuteSummarizer from '../components/MinuteSummarizer';
+import ManualDataEntry from '../components/ManualDataEntry';
 import { getStatus, getResults, getMediaVideoUrl, getMediaAnnotatedUrl } from '../api';
-import { ArrowLeft, Loader2, AlertCircle, AlertTriangle, CheckCircle2, Video } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertCircle, AlertTriangle, CheckCircle2, Video, Sparkles, MessageSquare } from 'lucide-react';
 
 export default function Analysis({ matchId, initialVideoUrl, onBackToUpload }) {
   const [loading, setLoading] = useState(true);
@@ -13,6 +16,7 @@ export default function Analysis({ matchId, initialVideoUrl, onBackToUpload }) {
   const [activeEventId, setActiveEventId] = useState(null);
   const [videoMode, setVideoMode] = useState('annotated'); // annotated | original
   const [currentTime, setCurrentTime] = useState(0);
+  const [manualList, setManualList] = useState([]);
 
   const videoRef = useRef(null);
 
@@ -31,6 +35,7 @@ export default function Analysis({ matchId, initialVideoUrl, onBackToUpload }) {
           const res = await getResults(matchId);
           if (!isMounted) return;
           setResults(res);
+          setManualList(res.manual_observations || []);
           setLoading(false);
           if (pollInterval) clearInterval(pollInterval);
         } else if (statusRes.status === 'failed') {
@@ -65,6 +70,10 @@ export default function Analysis({ matchId, initialVideoUrl, onBackToUpload }) {
     }
   };
 
+  const handleObservationAdded = (newObs) => {
+    setManualList((prev) => [...prev, newObs]);
+  };
+
   const originalVideoSrc = initialVideoUrl || getMediaVideoUrl(matchId);
   const annotatedVideoSrc = getMediaAnnotatedUrl(matchId);
   const activeVideoSrc = videoMode === 'annotated' ? annotatedVideoSrc : originalVideoSrc;
@@ -78,7 +87,7 @@ export default function Analysis({ matchId, initialVideoUrl, onBackToUpload }) {
         </button>
 
         <div className="analysis-header-center">
-          <h2 className="match-heading">Tactical Analysis #{matchId}</h2>
+          <h2 className="match-heading">Tactical Intelligence Dashboard #{matchId}</h2>
           <span className="sport-tag">Badminton (BWF Court)</span>
         </div>
 
@@ -131,7 +140,7 @@ export default function Analysis({ matchId, initialVideoUrl, onBackToUpload }) {
         </div>
       ) : results ? (
         <div className="analysis-content-body">
-          {/* Main Area: Large Video Preview beside Court Heatmap */}
+          {/* Main Area: Synchronized Player & Court Heatmap */}
           <div className="visuals-primary-grid">
             {/* Left: Synchronized Video Player */}
             <div className="video-player-panel">
@@ -192,9 +201,17 @@ export default function Analysis({ matchId, initialVideoUrl, onBackToUpload }) {
             </div>
           </div>
 
-          {/* Metric Cards Row (Compact, rendered below main area) */}
+          {/* AI Coach Diagnostic Section (Summary, Strengths, Weaknesses, Drills) */}
+          <section className="coach-section">
+            <AICoach
+              aiCoach={results.ai_coach}
+              durationSeconds={results.duration_seconds}
+            />
+          </section>
+
+          {/* Metric Cards Row */}
           <section className="metrics-row-section">
-            <h4 className="section-label">Movement Metrics</h4>
+            <h4 className="section-label">Physical & Movement Metrics</h4>
             <div className="metrics-cards-container">
               {results.metrics && results.metrics.length > 0 ? (
                 results.metrics.map((m) => (
@@ -204,6 +221,25 @@ export default function Analysis({ matchId, initialVideoUrl, onBackToUpload }) {
                 <div className="empty-state-text">No movement metrics available for this clip.</div>
               )}
             </div>
+          </section>
+
+          {/* 1-Minute Segment Breakdown & Summaries */}
+          <section className="minute-chunks-section">
+            <MinuteSummarizer
+              matchId={matchId}
+              durationSeconds={results.duration_seconds}
+              onSeekToChunk={(sec) => handleSeek(sec, null)}
+            />
+          </section>
+
+          {/* Manual Coach Observation Annotation Form */}
+          <section className="manual-annotation-section">
+            <ManualDataEntry
+              matchId={matchId}
+              currentTime={currentTime}
+              existingObservations={manualList}
+              onObservationAdded={handleObservationAdded}
+            />
           </section>
 
           {/* Evidence List Below */}

@@ -38,7 +38,8 @@ def create_match_job(file_path: str, filename: str) -> str:
         "court_corners": None,
         "output_dir": os.path.join(RESULTS_DIR, match_id),
         "results": None,
-        "error": None
+        "error": None,
+        "manual_observations": []
     }
     return match_id
 
@@ -145,6 +146,15 @@ def _run_pipeline_worker(
         for evt in raw_result.get("events", []):
             evt["evidence_url"] = f"/media/{match_id}/annotated.mp4"
 
+        # Generate AI Tactical Coach Report
+        from .vision.ai_coach import generate_ai_coach_report
+        ai_coach_data = generate_ai_coach_report(
+            metrics=raw_result.get("metrics", []),
+            events=raw_result.get("events", []),
+            tracks=raw_result.get("tracks", []),
+            court_calibrated=bool(court_corners and len(court_corners) == 4)
+        )
+
         normalized_result = {
             "match_id": match_id,
             "sport": sport,
@@ -155,7 +165,9 @@ def _run_pipeline_worker(
             "tracks": raw_result.get("tracks", []),
             "heatmap": raw_result.get("heatmap", {"width": 10, "height": 5, "cells": []}),
             "warnings": raw_result.get("warnings", []),
-            "media_urls": media_urls
+            "media_urls": media_urls,
+            "ai_coach": ai_coach_data,
+            "manual_observations": job.get("manual_observations", [])
         }
 
         job["results"] = normalized_result
