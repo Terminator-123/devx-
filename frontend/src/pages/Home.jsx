@@ -7,7 +7,7 @@ export default function Home({ onNavigateToAnalysis, onLoadSampleDemo }) {
     <div className="page-home">
       <header className="hero-header">
         <div className="badge-pill">
-          <span className="badge-dot" /> RallyLens AI • Hour 2 Sprint
+          <span className="badge-dot" /> RallyLens AI • Single-Camera Tactical Intelligence
         </div>
         <h1 className="hero-title">
           Badminton Multi-Frame Tracking & Tactical Analysis

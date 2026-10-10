@@ -126,8 +126,10 @@ def compute_validated_metrics(
             "confidence": 0.84
         })
     else:
-        # Fallback tracking volume metrics when uncalibrated
         total_samples = sum(len(t.get("samples", [])) for t in tracks)
+        if total_samples < 5 and duration_seconds > 1.0:
+            warnings.append("Low tracking density detected: camera angle or player occlusion limited detection count.")
+
         metrics.append({
             "key": "tracked_samples",
             "label": "Tracked positions",
@@ -144,5 +146,9 @@ def compute_validated_metrics(
             "quality": "observed",
             "confidence": 0.92
         })
+
+    # If calibrated but very few points mapped inside court
+    if court_calibrated and valid_points_count < 6:
+        warnings.append("Limited valid court positions: check if selected corner points align with court boundaries.")
 
     return metrics, heatmap_obj, warnings

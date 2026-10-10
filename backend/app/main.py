@@ -185,6 +185,16 @@ def get_match_results(match_id: str):
             detail=f"Analysis failed: {job.get('error')}"
         )
 
+    if not job.get("results"):
+        return JSONResponse(
+            status_code=409,
+            content={
+                "match_id": clean_id,
+                "status": job.get("status", "processing"),
+                "message": "Analysis results are not yet available on disk. Please retry."
+            }
+        )
+
     return job["results"]
 
 
