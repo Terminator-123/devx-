@@ -1,0 +1,17 @@
+# Python & virtual environment
+backend/.venv/
+__pycache__/
+*.pyc
+
+# Node & Frontend build
+frontend/node_modules/
+frontend/dist/
+
+# Local media uploads and generated video files
+backend/data/uploads/*
+!backend/data/uploads/.gitkeep
+backend/data/results/*/*.mp4
+backend/data/results/*/*.avi
+backend/data/results/*/*.jpg
+!backend/data/results/backup_demo/*.json
+!backend/data/results/validation_notes.md
